@@ -117,4 +117,7 @@ enterprise-distill/
 ## 版本
 
 - v1.0 · 2026-09-20 创建
+- **v1.1 · 2026-10-09 更新**：
+  - ① **对齐女娲 v1.3.0**——Phase 0.5 新增「调研工具探测」（agent-browser / Firecrawl MCP 条件接入）、Phase 1 新增 Wayback 死链救援与「信号类来源」规则、Phase 5 支持 graphify 图谱可视化
+  - ② **信号层工具条件接入**——last30days（海外/全球化企业舆情）、media-crawler（中国 C 端消费企业口碑），均软依赖、不就绪静默跳过
 - 主文件：`enterprise-distill/SKILL.md`

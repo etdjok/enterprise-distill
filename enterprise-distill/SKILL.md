@@ -132,10 +132,18 @@ Phase 6   · 保真度评分（可选）
 
 识别企业所属行业后，读取 `industry-adapters.md` 中的对应 section，在 Phase 1 采集时补充行业特有维度。
 
+### 调研工具探测（自动执行）
+
+- `agent-browser`（已装）：WebFetch 抓不到的动态页面/需交互页面（JS 渲染的官网/IR 页）优先用它；也是「WebSearch 不可用」降级路径的兜底
+- `Firecrawl MCP`（仅大型上市公司且已配置该 MCP 时启用）：整站抓取企业 IR 页面/年报合集转干净 Markdown；未配置用 `agent-browser` 兜底
+- `last30days`（**仅海外/全球化企业且已装时启用**）：补充近 30 天跨平台舆情（Reddit/X/YouTube/HN 等），供 Agent 5 他者视角、Agent 6 时间线参考；依赖 node/python 与可选 API key，未装或渠道不可用时静默跳过，不阻塞主流程
+- `media-crawler`（**仅中国 C 端消费企业且环境就绪时启用**）：采集小红书/抖音/B站/微博等平台用户侧口碑，供 Agent 4 表达与品牌、Agent 5 他者视角参考；需 Chrome CDP + 人工确认弹窗（必须人在场），不就绪静默跳过；**企业蒸馏场景禁用其知乎渠道**（遵守信息源黑名单）
+
 ### 完成检查（自动执行）
 
 - [ ] 目录已创建
 - [ ] 已识别行业 + 加载行业适配器
+- [ ] 已探测可用调研工具（agent-browser / Firecrawl MCP 如已配置 / last30days、media-crawler 如适用）
 - [ ] 如果是中国企业：晚点/财新/极客公园/极客邦/虎嗅（非洗稿版）优先；知乎/微信公众号永远排除
 - [ ] 如果是本地语料模式：素材已复制到 sources/ 对应子目录
 
@@ -165,6 +173,8 @@ Phase 6   · 保真度评分（可选）
 - 特别关注「反复出现 ≥ 3 次」的模式（这是企业的真信念）
 - **标注「最近 12 个月」的新动态**（防过时）
 - 限定每维度最多 15 个来源（避免信息过载）
+- **Wayback 死链救援（零安装）**：企业历史网页（旧官网/已下线产品页/旧财报链接）失效时，用 WebFetch 访问 `https://web.archive.org/web/<年份>/原URL` 读取存档快照；找到的一手内容正常入 sources/ 并标注「存档快照」
+- **信号类来源单列**：来自 last30days / media-crawler 的舆情与 UGC 内容标注为「信号类来源」，只用于佐证趋势与情绪，不得作为心智模型/启发式的一手证据
 
 ### Agent Prompt 模板
 
@@ -437,6 +447,8 @@ Step 2 的研究维度必须**从 Phase 2 提炼的心智模型自动推导**，
    → 受谁影响、影响了谁
 ```
 
+**图谱可视化（可选）**：Phase 5 完成后，可调用已装 `graphify` skill，把概念网络/流派地图画成图谱存入 `references/`，提升可读性。
+
 ---
 
 ## Phase 6 · 保真度评分（可选）
@@ -494,6 +506,8 @@ Step 2 的研究维度必须**从 Phase 2 提炼的心智模型自动推导**，
 | 蒸馏企业公开长文/年报的论证结构 | `book-idea-distill` | 年报 MD&A、创始人长文都是结构化文本 |
 | 深度拆解企业财报数字 | 财报分析 skill / 手动 | Phase 1 的 Agent 1 可调用 |
 | 跨行业企业对比（如 vs 不同赛道） | 本 Skill 模式 C | 概念网络自动处理跨行业 |
+| 补近 30 天海外舆情（海外/全球化企业） | `last30days` | Phase 1 的 Agent 5/6 可调用；未装静默跳过 |
+| 采中文 C 端用户口碑（中国消费企业） | `media-crawler` | Phase 1 的 Agent 4/5 可调用；禁用知乎渠道；需人工在场 |
 
 ---
 
@@ -506,4 +520,5 @@ Step 2 的研究维度必须**从 Phase 2 提炼的心智模型自动推导**，
 ---
 
 > 本 Skill方法论借鉴自 [女娲 · Skill造人术](https://github.com/alchaincyf/nuwa-skill) 和 [book-idea-distill](file:///c:/Users/%E7%8E%8B%E4%BF%AE%E8%AF%84/.trae-cn/skills/book-idea-distill/SKILL.md)
-> 版本：v1.0 · 创建日期：2026-09-20
+> 版本：v1.1 · 创建日期：2026-09-20 · 最近更新：2026-10-09
+> v1.1 更新说明：① 对齐女娲 v1.3.0——Phase 0.5 新增「调研工具探测」（agent-browser / Firecrawl MCP 条件接入）、Phase 1 新增 Wayback 死链救援与「信号类来源」规则、Phase 5 支持 graphify 图谱可视化；② 信号层工具条件接入——last30days（海外/全球化企业舆情）、media-crawler（中国 C 端消费企业口碑），均软依赖、不就绪静默跳过
