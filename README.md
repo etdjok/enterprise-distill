@@ -120,4 +120,6 @@ enterprise-distill/
 - **v1.1 · 2026-10-09 更新**：
   - ① **对齐女娲 v1.3.0**——Phase 0.5 新增「调研工具探测」（agent-browser / Firecrawl MCP 条件接入）、Phase 1 新增 Wayback 死链救援与「信号类来源」规则、Phase 5 支持 graphify 图谱可视化
   - ② **信号层工具条件接入**——last30days（海外/全球化企业舆情）、media-crawler（中国 C 端消费企业口碑），均软依赖、不就绪静默跳过
+- **v1.1.1 · 2026-10-10 更新**：
+  - 修复长文档生成频繁触发「输出过长，请输入继续」——新增「输出与落盘纪律（防截断）」全局规则；Phase 2/3/5/6 补齐落盘与分节写入指令；子 Agent 统一“只回摘要”；降级表新增截断应急行
 - 主文件：`enterprise-distill/SKILL.md`
